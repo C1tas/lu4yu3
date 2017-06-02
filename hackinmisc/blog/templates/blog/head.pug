@@ -1,0 +1,13 @@
+- load static
+//link(href="//cdn.bootcss.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css",rel="stylesheet")
+link(href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css", rel="stylesheet")
+//script(href="//cdn.bootcss.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js")
+link(href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css",rel="stylesheet")
+script(src="http://cdn.bootcss.com/jquery/3.2.1/jquery.js")
+script(src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js")
+link(rel="stylesheet",href="{% static 'assets/css/wsm/dashboard.css' %}", type="text/css", charset="utf-8")
+
+- load compress
+{% compress css %}
+link(rel="stylesheet",href="{% static 'assets/blog/css/sass/style.scss' %}", type="text/x-scss", charset="utf-8")
+{% endcompress %}
