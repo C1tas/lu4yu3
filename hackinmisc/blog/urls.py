@@ -4,5 +4,5 @@ from . import views
 
 app_name = 'blog'
 urlpatterns = [
-    url(r'^#home/$', views.index, name='home'),
+    url(r'^!home/$', views.index, name='home'),
 ]

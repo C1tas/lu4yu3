@@ -25,12 +25,13 @@ SECRET_KEY = '4+-=gz)$1q410-@#1h=%y)3=-l+gl=pt#muc--)v)naj+_3liq'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [*]
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'blog',
     'compressor',
     'django.contrib.admin',
     'django.contrib.auth',
