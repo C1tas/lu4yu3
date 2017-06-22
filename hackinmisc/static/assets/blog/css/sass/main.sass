@@ -1,0 +1,63 @@
+@mixin transition($transition-property, $transition-time, $method)
+  -webkit-transition: $transition-property $transition-time $method
+  -moz-transition: $transition-property $transition-time $method
+  -ms-transition: $transition-property $transition-time $method
+  -o-transition: $transition-property $transition-time $method
+  transition: $transition-property $transition-time $method
+
+$padding: 400px
+
+body
+  display: flex
+  min-height: 100vh
+  flex-direction: column
+
+header, main, footer
+  padding-left: $padding
+  @include transition(padding-left, 0.5s, ease)
+
+.sidebar
+  position: fixed
+  width: $padding
+  height: 100%
+  @include transition(width, 0.5s, ease)
+
+.sidebar img
+  display: block
+  border-radius: 100%
+  margin: 0 auto
+
+.sidebar .fav
+  padding-top: 55px
+
+.sidebar .menu-list
+  padding-top: 40px
+
+.menu-list li
+  height: 55px
+  padding: 0 40px
+
+main
+  flex: 1 0 auto
+
+@media only screen and (max-width: 1200px)
+  header, main, footer
+    padding-left: 200px
+  .sidebar
+    width: 200px
+  .sidebar span
+    display: block
+  .sidebar .menu-list li
+    padding: 0 50px
+    
+@media only screen and (max-width: 992px)
+  header, main, footer
+    padding-left: 40px
+  .sidebar
+    width: 40px
+  .sidebar span
+    display: none
+  .sidebar .menu-list li
+    padding: 0 8px
+
+

@@ -2,9 +2,33 @@
 head
   include blog/head.pug
 body
-  include blog/nav.pug
+  .sidebar.blue.lighten-3
+    a(href="#")
+      .fav
+        img.responsive-img(src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==", width="250",heith="250")
+    ul.menu-list
+      li
+        a.tooltipped(href="#",data-position="right",data-delay="50",data-tooltip="Nothing!~")
+          i.material-icons add
+          span Pages
+      li
+        a.tooltipped(href="#",data-position="right",data-delay="50",data-tooltip="Trash Can")
+          i.material-icons add
+          span Projects
+      li
+        a.tooltipped(href="#",data-position="right",data-delay="50",data-tooltip="Just Tomorrow")
+          i.material-icons add
+          span TODO
+      li
+        a.tooltipped(href="#",data-position="right",data-delay="50",data-tooltip="Those gays")
+          i.material-icons add
+          span Friends
+    ul.social-
 
-  block body
+  header
+    include blog/nav.pug
+  main
+    block body
 
-footer
-  include blog/footer.pug
+  footer
+    include blog/footer.pug

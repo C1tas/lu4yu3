@@ -1,0 +1,21 @@
+extends blog/base.pug
+
+block body
+  .container
+    .row
+      .col.s12.m9.l10
+        {{ post.content_html | safe }}
+        .section.scrollspy#title2
+          h1 cool
+          code.
+            #! /env/node
+            var a = "123"
+            console.log(a)
+            document.cookie
+            test
+            for test
+
+
+      .col.m3.l2.hide-on-small-only
+        {{ post.content_toc | safe }}
+
