@@ -1,11 +1,11 @@
 
 $(document).ready(function(){
-  $('.scrollspy').scrollSpy();
   $('.table-of-contents').pushpin({
     top: 0,
     bottom: 200000,
     offset: 100
   });
+  $('.scrollspy').scrollSpy();
 });
 
 // Floating-Fixed table of contents

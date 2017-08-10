@@ -8,24 +8,36 @@ block body
           .card.blue-grey.darken-1.medium
             .card-content.white-text
               a(href="{% url 'blog:post' slug=post.slug %}")
-                span.card-title(style="display:inline;") {{ post.title }}
+                span.card-title(style="display:inline;") {{ post.summary }}
               ul.right
                 for category in post.categories
                   li(style="display:inline;")
                     span.badge.new.orange.lighten-1
                       {{ category }}
               .code
-                {{ post.content_html | safe }}
+                a(href="{% url 'blog:post' slug=post.slug %}")
+                  h2 {{ post.title | safe }}
+
             .card-action
-              a(href="#") Go
-              a(href="#") test
-              .row
-                .col.s12
-                  ul.tabs.blue-grey.darken-1
-                    li.tab.col.s2.left-align Tags:
-                    li.tab.col.s10
-                      for tag in post.tags
-                        .chip {{ tag }}
+              .row.vert-p
+                .col.s4.flex
+                  .fav
+                    img.averter(src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==", width="60", height="60", class="responsive-img")
+                  .author
+                    strong C1tas
+                    br
+                    span {{ post.updated }}
+                .col.s4
+                  // ul.tabs.blue-grey.darken-1
+                  //   li.tab.col.s2.left-align Tags:
+                  //   li.tab.col.s10
+                  //     for tag in post.tags
+                  //       .chip {{ tag }}
+                .col.s4.vert-c
+                  .tags
+                    for tag in post.tags
+                      a.tag(href="#") {{ tag }}
+
 
     ul.pagination
       li.disabled

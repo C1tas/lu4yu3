@@ -7,3 +7,6 @@ env
 .sass-cache
 .DS_Store
 upload_post
+logs
+run
+guniorn_start

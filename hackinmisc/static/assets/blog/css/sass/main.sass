@@ -5,7 +5,7 @@
   -o-transition: $transition-property $transition-time $method
   transition: $transition-property $transition-time $method
 
-$padding: 400px
+$padding: 0px
 
 body
   display: flex
@@ -18,7 +18,7 @@ header, main, footer
 
 .sidebar
   position: fixed
-  width: $padding
+  width: 200px
   height: 100%
   @include transition(width, 0.5s, ease)
 
@@ -40,24 +40,57 @@ header, main, footer
 main
   flex: 1 0 auto
 
-@media only screen and (max-width: 1200px)
-  header, main, footer
-    padding-left: 200px
-  .sidebar
-    width: 200px
-  .sidebar span
-    display: block
-  .sidebar .menu-list li
-    padding: 0 50px
-    
-@media only screen and (max-width: 992px)
-  header, main, footer
-    padding-left: 40px
-  .sidebar
-    width: 40px
-  .sidebar span
-    display: none
-  .sidebar .menu-list li
-    padding: 0 8px
+.sidebar
+  display: none
 
+/* @media only screen and (max-width: 1200px)
+/*   header, main, footer
+/*     padding-left: 200px
+/*   .sidebar
+/*     width: 200px
+/*   .sidebar span
+/*     display: block
+/*   .sidebar .menu-list li
+/*     padding: 0 50px
 
+/* @media only screen and (max-width: 992px)
+/*   header, main, footer
+/*     padding-left: 40px
+/*   .sidebar
+/*     width: 40px
+/*   .sidebar span
+/*     display: none
+/*   .sidebar .menu-list li
+/*     padding: 0 8px
+
+.card-action img
+  border-radius: 100%
+
+.fav
+  display: inline-block
+  margin-right: 10px
+
+.author
+  display: inline-block
+
+.tags
+  text-align: right
+
+.tag
+  display: inline-block
+
+.vert-p.row
+  position: relative
+  margin-bottom: 0px
+
+.vert-c
+  position:absolute
+  top: 50%
+  transform: translateY(100%)
+
+.post
+  margin-top: 40px
+  margin-bottom: 40px
+
+p
+  font-size: 1.7em

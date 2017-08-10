@@ -16,6 +16,7 @@ class Article(models.Model):
     content_md = models.TextField()
     content_html = models.TextField()
     content_toc = models.TextField()
+    summary = models.CharField(max_length=100)
     tags = ArrayField(models.CharField(max_length=40),
                       default=return_list([':D']))
     categories = ArrayField(models.CharField(max_length=40),
