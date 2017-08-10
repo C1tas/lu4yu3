@@ -1,0 +1,41 @@
+extends blog/base.pug
+
+block body
+  .container
+    .row
+      .col.s12.m12.l10
+        for post in posts
+          .post
+            .title
+              h1(style="text-decoration:underline")
+                a(href="#") {{ post.title }}
+            .date
+              span post   at: {{ post.created }}
+              br
+              span update at: {{ post.updated }}
+            .content
+              {{ post.content_html | safe}}
+              // <div class="progress">
+              // <div class="determinate" style="width: 70%"></div>
+          // .progress
+          //   .determinate(style="width: 0%")
+          if not forloop.last
+            hr
+
+    ul.pagination
+      li.disabled
+        a(href="#!")
+          i.material-icons chevron_left
+      li.active
+        a(herf="#!") 1
+      li.waves-effect
+        a(herf="#!") 2
+      li.waves-effect
+        a(herf="#!") 3
+      li.waves-effect
+        a(herf="#!") 4
+      li.waves-effect
+        a(herf="#!") 5
+      li.waves-effect
+        a(herf="#!")
+          i.material-icons chevron_right
