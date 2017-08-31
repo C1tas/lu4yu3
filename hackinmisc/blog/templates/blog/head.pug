@@ -10,11 +10,14 @@ script(src="{% static 'materialize/init.js' %}")
 link(rel="stylesheet",href="https://fonts.googleapis.com/icon?family=Material+Icons")
 link(rel="stylesheet",href="{% static 'assets/blog/css/styles.css' %}")
 
+link(rel="stylesheet",href="{% static 'materialize/sass/materialize.css' %}")
+
+
 - load compress
 {% compress css %}
 link(rel="stylesheet",href="{% static 'assets/blog/css/sass/style.scss' %}", type="text/x-scss", charset="utf-8")
 link(rel="stylesheet",href="{% static 'assets/blog/css/sass/main.sass' %}", type="text/x-sass", charset="utf-8")
 {% endcompress %}
-{% compress css %}
-link(rel="stylesheet",href="{% static 'materialize/sass/materialize.scss' %}", type="text/x-scss", charset="utf-8")
-{% endcompress %}
+//{% compress css %}
+//link(rel="stylesheet",href="{% static 'materialize/sass/materialize.scss' %}", type="text/x-scss", charset="utf-8")
+//{% endcompress %}

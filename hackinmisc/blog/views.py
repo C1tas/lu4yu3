@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.template.defaultfilters import slugify
 from django.db import models
 from django.conf import settings
+from django.shortcuts import redirect
 
 from bs4 import BeautifulSoup
 
@@ -17,20 +18,8 @@ import datetime
 
 
 def index(request):
-    try:
-        article_list = Article.objects.order_by('-created')[:3]
-    except:
-        article_list = []
-    try:
-        tag_list = TCList.objects.first().tag_list
-        cate_list = TCList.objects.first().cate_list
-    except:
-        tag_list = []
-        cate_list = []
+    return redirect('/!home')
 
-    return render(request, 'blog/index.pug.bak', {'posts': article_list,
-                                                  'tags': tag_list,
-                                                  'categories': cate_list,})
 
 def home(request):
     try:
@@ -48,9 +37,11 @@ def home(request):
                                              'tags': tag_list,
                                              'categories': cate_list,})
 
+
 # func for next pages
 def pages(requests):
     pass
+
 
 def post(request, slug):
     cur_article = Article.objects.get(slug = slug)
