@@ -9,4 +9,4 @@ env
 upload_post
 logs
 run
-guniorn_start
+gunicorn_start
