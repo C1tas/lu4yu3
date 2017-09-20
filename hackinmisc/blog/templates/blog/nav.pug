@@ -1,7 +1,34 @@
 block nav
   nav.grey.darken-2
     .nav-wrapper
-      a.brand-logo.right(href="#") C1tas
+      a.brand-logo.right.dropdown-button(href="#", data-activates='dropdown1') C1tas
+      ul#dropdown1.dropdown-content
+        li
+          a(href="{% url 'blog:home' %}") post
+        li
+          a(href="{% url 'blog:daily' %}") daily
+        li.divider
+        li
+          a(href="#") about
+        li
+          a(href="#")
+            //How to: Jade HTML content after child element
+            i.material-icons view_module
+            | more
       ul.left.hide-on-med-and-down
         li
           a(href="#")
+
+
+<!-- Dropdown Trigger -->
+//<a class='dropdown-button btn' href='#' data-activates='dropdown1'>Drop Me!</a>
+//
+<!-- Dropdown Structure -->
+//<ul id='dropdown1' class='dropdown-content'>
+//<li><a href="#!">one</a></li>
+//<li><a href="#!">two</a></li>
+//<li class="divider"></li>
+//<li><a href="#!">three</a></li>
+//<li><a href="#!"><i class="material-icons">view_module</i>four</a></li>
+//<li><a href="#!"><i class="material-icons">cloud</i>five</a></li>
+//</ul>

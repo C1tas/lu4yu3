@@ -21,6 +21,7 @@ class Article(models.Model):
                       default=return_list([':D']))
     categories = ArrayField(models.CharField(max_length=40),
                             default=return_list([':D']))
+    type = models.CharField(max_length=100, default='post')
     views = models.IntegerField(default=0)
     created = models.DateTimeField(db_index=True, auto_now_add=True)
     updated = models.DateTimeField(db_index=True, auto_now_add=True)

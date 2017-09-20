@@ -1,5 +1,7 @@
 extends blog/base.pug
 
+{% load blog_extras %}
+
 block body
   .container
     .row
@@ -8,7 +10,7 @@ block body
           .post
             .title
               h1(style="text-decoration:underline")
-                a(href="#") {{ post.title }}
+                a(href="{% url 'blog:post' slug=post.slug %}") {{ post.title }}
             .date
               span post   at: {{ post.created }}
               br
@@ -22,20 +24,45 @@ block body
           if not forloop.last
             hr
 
-    ul.pagination
-      li.disabled
-        a(href="#!")
-          i.material-icons chevron_left
-      li.active
-        a(herf="#!") 1
-      li.waves-effect
-        a(herf="#!") 2
-      li.waves-effect
-        a(herf="#!") 3
-      li.waves-effect
-        a(herf="#!") 4
-      li.waves-effect
-        a(herf="#!") 5
-      li.waves-effect
-        a(herf="#!")
-          i.material-icons chevron_right
+
+    if is_paginated
+      ul.pagination
+        if has_previous
+          li.waves-effect
+            a(href="?page={{ page_obj.previous_page_number }}")
+              i.material-icons chevron_left
+        else
+          li.disabled
+            a(href="#!")
+              i.material-icons chevron_left
+        if first
+          li.waves-effect
+            a(href="#!") {{ 1 }}
+
+        if left
+          if left_has_more
+            span ...
+            for i in left
+              li.waves-effect
+                a(href="#!") {{ i }}
+        //<a href="?page={{ page_obj.number }}" style="color: red">{{ page_obj.number }}</a>
+        li.active
+          a(href="#!") {{ page_obj.number }}
+        if right
+          for i in right
+            li.waves-effect
+              a(href="?page={{ i }}") {{ i }}
+          if right_has_more
+            span ...
+        if last
+          li.waves-effect
+            a(href="#!") {{ page_obj.number }}
+
+        if has_next
+          li.waves-effect
+            a(href="?page={{ page_obj.next_page_number }}")
+              i.material-icons chevron_right
+        else
+          li.disabled
+            a(href="#!")
+              i.material-icons chevron_right

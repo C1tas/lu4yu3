@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
@@ -6,14 +7,16 @@ from django.template.defaultfilters import slugify
 from django.db import models
 from django.conf import settings
 from django.shortcuts import redirect
+from django.views.generic import ListView
 
 from bs4 import BeautifulSoup
 
 from .models import Article, TCList
-from .forms import  ArticlePublishApiForm
+from .forms import ArticlePublishApiForm
 
 import markdown
 import datetime
+import math
 # Create your views here.
 
 
@@ -21,9 +24,103 @@ def index(request):
     return redirect('/!home')
 
 
-def home(request):
+class PostView(ListView):
+    model = Article
+    template_name = 'blog/home.pug'
+    context_object_name = 'posts'
+    paginate_by = 3
+
+    def get_queryset(self):
+        # cate = get_object_or_404(Category, pk=self.kwargs.get('pk'))
+        return super(PostView, self).get_queryset().filter(type='post')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        paginator = context.get('paginator')
+        page = context.get('page_obj')
+        is_paginated = context.get('is_paginated')
+        pagination_data = self.pagination_data(paginator, page, is_paginated)
+        context.update(pagination_data)
+        return context
+
+    def pagination_data(self, paginator, page, is_paginated):
+        if not is_paginated:
+            return {}
+
+        left = []
+        right = []
+        left_has_more = False
+        right_has_more = False
+        first = False
+        last = False
+
+        page_has_next = page.has_next()
+        page_has_previous = page.has_previous()
+        page_number = page.number
+        total_pages = paginator.num_pages
+        page_range = paginator.page_range
+
+        if page_number == 1:
+            right = page_range[page_number:page_number + 2]
+            if right[-1] < total_pages - 1:
+                right_has_more = True
+            if right[-1] < total_pages:
+                last = True
+
+        elif page_number == total_pages:
+            # 比如分页页码列表是 [1, 2, 3, 4]，那么获取的就是 left = [2, 3]
+            # 这里只获取了当前页码后连续两个页码，你可以更改这个数字以获取更多页码。
+            left = page_range[(page_number - 3) if (page_number - 3) > 0 else 0:page_number - 1]
+
+            if left[0] > 2:
+                left_has_more = True
+
+            if left[0] >= 1:
+                first = True
+        else:
+            left = page_range[(page_number - 3) if (page_number - 3) > 0 else 0:page_number - 1]
+            right = page_range[page_number:page_number + 2]
+
+            if right[-1] < total_pages - 1:
+                right_has_more = True
+            if right[-1] < total_pages:
+                last = True
+
+            if left[0] > 2:
+                left_has_more = True
+            if left[0] >= 1:
+                first = True
+
+        data = {
+            'left': left,
+            'right': right,
+            'left_has_more': left_has_more,
+            'right_has_more': right_has_more,
+            'first': first,
+            'last': last,
+            'has_previous': page_has_previous,
+            'has_next': page_has_next,
+        }
+        print(data)
+        return data
+
+
+class DailyView(PostView):
+    def get_queryset(self):
+        # cate = get_object_or_404(Category, pk=self.kwargs.get('pk'))
+        return super(PostView, self).get_queryset().filter(type='daily')
+
+
+def home(request, page=1):
     try:
-        article_list = Article.objects.order_by('-created')[:3]
+        # article_list = Article.objects.order_by('-created')[:3]
+        start_mark = (page - 1) * 3
+        end_mark = page * 3
+
+        all_article_list = Article.objects.filter(type='post').order_by('-created')[:3]
+        page_count = math.ceil(all_article_list.count() / 3)
+        article_list = all_article_list[start_mark:end_mark]
+
     except:
         article_list = []
     try:
@@ -35,16 +132,40 @@ def home(request):
 
     return render(request, 'blog/home.pug', {'posts': article_list,
                                              'tags': tag_list,
-                                             'categories': cate_list,})
+                                             'categories': cate_list,
+                                             'page_count': page_count,
+                                             'current_page': page,
+                                             })
 
 
-# func for next pages
-def pages(requests):
-    pass
+
+def daily(request, page=1):
+    try:
+        # article_list = Article.objects.order_by('-created')[:3]
+        start_mark = (page-1) * 3
+        end_mark = page * 3
+
+        all_article_list = Article.objects.filter(type='daily').order_by('-created')
+        page_count = math.ceil(all_article_list.count()/3)
+        article_list = all_article_list[start_mark:end_mark]
+
+    except:
+        article_list = []
+    # try:
+    #     tag_list = TCList.objects.first().tag_list
+    #     cate_list = TCList.objects.first().cate_list
+    # except:
+    #     tag_list = []
+    #     cate_list = []
+
+    return render(request, 'blog/home.pug', {'posts': article_list,
+                                             'page_count': page_count,
+                                             'current_page': page,
+                                             })
 
 
 def post(request, slug):
-    cur_article = Article.objects.get(slug = slug)
+    cur_article = Article.objects.get(slug=slug)
     if cur_article:
         return render(request, 'blog/post.pug', {'post': cur_article})
     pass
@@ -57,7 +178,7 @@ def publish_article(request):
             tmp_article = tmp_form.save(commit=False)
             md = markdown.Markdown(extensions=['markdown.extensions.toc(baselevel=3)'])
             tmp_article.content_html = md.convert(tmp_article.content_md)
-            soup = BeautifulSoup(md.toc ,'html.parser')
+            soup = BeautifulSoup(md.toc, 'html.parser')
             soup.ul['class'] = 'section table-of-contents pinned'
             tmp_article.author = 'C1tas'
             tmp_article.content_toc = str(soup)
@@ -126,6 +247,8 @@ def api_update_article(request):
                 tmp_article.author = md.Meta['author'][0]
             if 'summary' in md.Meta:
                 tmp_article.summary = md.Meta['summary'][0]
+            if 'type' in md.Meta:
+                tmp_article.type = md.Meta['type'][0]
             if not md.toc:
                 return HttpResponse("Your post looks strange~")
 
@@ -138,6 +261,7 @@ def api_update_article(request):
                 cur_article.categories = tmp_article.categories
                 cur_article.content_md = tmp_article.content_md
                 cur_article.author = tmp_article.author
+                cur_article.type = tmp_article.type
                 soup = BeautifulSoup(md.toc, 'html.parser')
                 if soup.ul:
                     soup.ul['class'] = 'section table-of-contents pinned'
