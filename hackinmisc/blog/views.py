@@ -4,10 +4,9 @@ from django.http import HttpResponse
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.template.defaultfilters import slugify
-from django.db import models
 from django.conf import settings
 from django.shortcuts import redirect
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 from bs4 import BeautifulSoup
 
@@ -24,7 +23,7 @@ def index(request):
     return redirect('/!home')
 
 
-class PostView(ListView):
+class HomeView(ListView):
     model = Article
     template_name = 'blog/home.pug'
     context_object_name = 'posts'
@@ -32,7 +31,7 @@ class PostView(ListView):
 
     def get_queryset(self):
         # cate = get_object_or_404(Category, pk=self.kwargs.get('pk'))
-        return super(PostView, self).get_queryset().filter(type='post')
+        return super(HomeView, self).get_queryset().filter(type='post')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -101,74 +100,20 @@ class PostView(ListView):
             'has_previous': page_has_previous,
             'has_next': page_has_next,
         }
-        print(data)
+        # print(data)
         return data
 
 
-class DailyView(PostView):
+class DailyView(HomeView):
     def get_queryset(self):
         # cate = get_object_or_404(Category, pk=self.kwargs.get('pk'))
-        return super(PostView, self).get_queryset().filter(type='daily')
+        return super(HomeView, self).get_queryset().filter(type='daily')
 
 
-def home(request, page=1):
-    try:
-        # article_list = Article.objects.order_by('-created')[:3]
-        start_mark = (page - 1) * 3
-        end_mark = page * 3
-
-        all_article_list = Article.objects.filter(type='post').order_by('-created')[:3]
-        page_count = math.ceil(all_article_list.count() / 3)
-        article_list = all_article_list[start_mark:end_mark]
-
-    except:
-        article_list = []
-    try:
-        tag_list = TCList.objects.first().tag_list
-        cate_list = TCList.objects.first().cate_list
-    except:
-        tag_list = []
-        cate_list = []
-
-    return render(request, 'blog/home.pug', {'posts': article_list,
-                                             'tags': tag_list,
-                                             'categories': cate_list,
-                                             'page_count': page_count,
-                                             'current_page': page,
-                                             })
-
-
-
-def daily(request, page=1):
-    try:
-        # article_list = Article.objects.order_by('-created')[:3]
-        start_mark = (page-1) * 3
-        end_mark = page * 3
-
-        all_article_list = Article.objects.filter(type='daily').order_by('-created')
-        page_count = math.ceil(all_article_list.count()/3)
-        article_list = all_article_list[start_mark:end_mark]
-
-    except:
-        article_list = []
-    # try:
-    #     tag_list = TCList.objects.first().tag_list
-    #     cate_list = TCList.objects.first().cate_list
-    # except:
-    #     tag_list = []
-    #     cate_list = []
-
-    return render(request, 'blog/home.pug', {'posts': article_list,
-                                             'page_count': page_count,
-                                             'current_page': page,
-                                             })
-
-
-def post(request, slug):
-    cur_article = Article.objects.get(slug=slug)
-    if cur_article:
-        return render(request, 'blog/post.pug', {'post': cur_article})
-    pass
+class PostView(DetailView):
+    model = Article
+    template_name = 'blog/post.pug'
+    context_object_name = 'post'
 
 
 def publish_article(request):
